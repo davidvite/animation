@@ -4,35 +4,40 @@
 	<title></title>
 </head>
 <body>
-<canvas width="640" height="426"></canvas>
+<canvas id="canvas" width="640" height="426"></canvas>
 
 <script type="text/javascript">
-	var canvas = document.querySelector("canvas");
-	var ctx = canvas.getContex("2d");
+	var canvas = document.querySelector("#canvas");
+	var ctx = canvas.getContext("2d");
 
-	//Add image
+	//Load Image and appy grayscale
 	var image = new Image();
-	image.onload = function( ) {
-		ctx.drawImage( image , 0 , 0);
-		// grayScale
+	image.onload = function() {
+		ctx.drawImage(image , 0 , 0 , canvas.width , canvas.height);
+		grayscale();
 	}
+	// Load image file
 	image.src = "imagen.jpg"
-
+	// Algorithm to convert color to gray scale (LUMA)
 	var makePixelGray = function (r , g, b, a){
-		var y = (0.3 *r)+(0.59 *g) + (0.11 *b);
-		return {r :y ,  g:y , b: y , a:y};
+		var y = (0.3 * r) + (0.59 * g) + (0.11 * b);
+		r = y ;
+		g = y ;
+		b = y ;
+		a = y ;
+		return (r, g, b, a );
 	}
-
+	// GrayScale function
 	function grayscale(){
 		var r, g, b, a;
-		var imageData = ctx.getImageData(0,0,640,426);
-		var numPix = imageData.data.lenth / 4 ;
-		for(var i =0; ; i < numPix ; i++){
+		var imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+		var numPixels = imageData.data.lenth / 4 ;
+		
+		for(var i =0; i < numPixels; i++){
 			r = imageData.data[i * 4 + 0];
 			g = imageData.data[i * 4 + 1];
 			b = imageData.data[i * 4 + 2];
 			a = imageData.data[i * 4 + 3];
-
 			pixel = makePixelGray(r , g , b ,a);
 			imageData.data[i * 4 + 0] = pixel.r;
 			imageData.data[i * 4 + 1] = pixel.g;
